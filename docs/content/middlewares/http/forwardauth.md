@@ -285,6 +285,62 @@ http:
     authRequestHeaders = "Accept,X-CustomHeader"
 ```
 
+### `addAuthCookiesToResponse`
+
+The `addAuthCookiesToResponse` option is the list of cookies to copy from the authentication server to the response, replacing any existing conflicting cookie from the forwarded response.
+
+```yaml tab="Docker"
+labels:
+  - "traefik.http.middlewares.test-auth.forwardauth.addAuthCookiesToResponse=Session-Cookie, State-Cookie"
+```
+
+```yaml tab="Kubernetes"
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: test-auth
+spec:
+  forwardAuth:
+    address: https://example.com/auth
+    addAuthCookiesToResponse:
+      - Session-Cookie
+      - State-Cookie
+```
+
+```yaml tab="Consul Catalog"
+- "traefik.http.middlewares.test-auth.forwardauth.addHeadersToResponse=Set-Cookie, X-Token"
+```
+
+```json tab="Marathon"
+"labels": {
+  "traefik.http.middlewares.test-auth.forwardauth.addAuthCookiesToResponse": "Session-Cookie,State-Cookie"
+}
+```
+
+```yaml tab="Rancher"
+labels:
+  - "traefik.http.middlewares.test-auth.forwardauth.addAuthCookiesToResponse=Session-Cookie, State-Cookie"
+```
+
+```toml tab="File (TOML)"
+[http.middlewares]
+  [http.middlewares.test-auth.forwardAuth]
+    address = "https://example.com/auth"
+    addAuthCookiesToResponse = ["Session-Cookie", "State-Cookie"]
+```
+
+```yaml tab="File (YAML)"
+http:
+  middlewares:
+    test-auth:
+      forwardAuth:
+        address: "https://example.com/auth"
+        addAuthCookiesToResponse:
+          - "Session-Cookie"
+          - "State-Cookie"
+```
+
+
 ### `tls`
 
 _Optional_
@@ -322,7 +378,7 @@ metadata:
   namespace: default
 
 data:
-  # Must contain a certificate under either a `tls.ca` or a `ca.crt` key. 
+  # Must contain a certificate under either a `tls.ca` or a `ca.crt` key.
   tls.ca: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0=
 ```
 
